@@ -1,10 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:keva_health/Widgets/survey_objects%20copy.dart';
-import 'package:keva_health/Widgets/survey_objects.dart';
-import 'package:research_package/research_package.dart';
-import 'dart:convert';
-import 'package:video_player/video_player.dart';
 
 class SurveyPage extends StatelessWidget {
   @override
@@ -12,47 +7,50 @@ class SurveyPage extends StatelessWidget {
     Size screen = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
-        child: Column(children: [
-          Container(
-            alignment: Alignment.topLeft,
-            margin: EdgeInsets.all(12),
-            child: Text.rich(
-              TextSpan(
-                  text: 'keva health',
-                  style: TextStyle(
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 25,
-                    color: Colors.lightBlueAccent,
-                  )),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: screen.height * 0.075),
-            child: Container(height: screen.height * 0.7, child: UserSurvey()),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
-            child: Container(
-              alignment: Alignment.bottomRight,
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                onPressed: () => [
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return SurveyIntro();
-                  })),
-                ],
-                color: Colors.lightBlueAccent,
-                child: Text("Next!",
+        child: SingleChildScrollView(
+          child: Column(children: [
+            Container(
+              alignment: Alignment.topLeft,
+              margin: EdgeInsets.all(12),
+              child: Text.rich(
+                TextSpan(
+                    text: 'keva health',
                     style: TextStyle(
-                        fontFamily: 'Poppins-Medium',
-                        color: Colors.white,
-                        fontSize: 16)),
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 25,
+                      color: Color(0xFF426CB4),
+                    )),
               ),
             ),
-          )
-        ]),
+            Padding(
+              padding: EdgeInsets.only(top: screen.height * 0.075),
+              child:
+                  Container(height: screen.height * 0.7, child: UserSurvey()),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
+              child: Container(
+                alignment: Alignment.bottomRight,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  onPressed: () => [
+                    Navigator.push(context, MaterialPageRoute(builder: (_) {
+                      return SurveyIntro();
+                    })),
+                  ],
+                  color: Color(0xFF426CB4),
+                  child: Text("Next!",
+                      style: TextStyle(
+                          fontFamily: 'Poppins-Medium',
+                          color: Colors.white,
+                          fontSize: 16)),
+                ),
+              ),
+            )
+          ]),
+        ),
       ),
     );
   }
@@ -82,9 +80,17 @@ class UserSurvey extends StatelessWidget {
   }
 }
 
-class SurveyIntro extends StatelessWidget {
+enum boolChoices { yes, no }
+
+class SurveyIntro extends StatefulWidget {
   const SurveyIntro({Key key}) : super(key: key);
 
+  @override
+  _SurveyIntroState createState() => _SurveyIntroState();
+}
+
+class _SurveyIntroState extends State<SurveyIntro> {
+  boolChoices initial = boolChoices.no;
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
@@ -104,22 +110,74 @@ class SurveyIntro extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: 'Poppins-Medium',
                           fontSize: 25,
-                          color: Colors.lightBlueAccent,
+                          color: Color(0xFF426CB4),
                         )),
                   ),
                 ),
-                Container(
-                    height: screen.height * 0.39, child: LinearSurveyPage()),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 15.0, bottom: 12.0, top: 10.0),
+                  padding: EdgeInsets.only(
+                      left: 15.0, bottom: 12.0, top: screen.height * 0.025),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Do you have an RPM solution?",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        width: screen.width * 0.9,
+                        child: Card(
+                            elevation: 5.0,
+                            child: Container(
+                                height: 125,
+                                width: screen.width * 0.7,
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      title: Text('Yes',
+                                          style: TextStyle(fontSize: 15)),
+                                      leading: Radio(
+                                        value: boolChoices.yes,
+                                        groupValue: initial,
+                                        onChanged: (boolChoices value) {
+                                          setState(() {
+                                            initial = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    ListTile(
+                                      title: Text('No',
+                                          style: TextStyle(fontSize: 15)),
+                                      leading: Radio(
+                                        value: boolChoices.no,
+                                        groupValue: initial,
+                                        onChanged: (boolChoices value) {
+                                          setState(() {
+                                            initial = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ))),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: 15.0, bottom: 12.0, top: screen.height * 0.05),
                   child: Text(
                     "If yes, what's the name of your current solution?",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     textAlign: TextAlign.left,
                   ),
                 ),
-                SizedBox(height: 10),
                 Container(
                     child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -141,14 +199,14 @@ class SurveyIntro extends StatelessWidget {
                 )),
                 SizedBox(height: 20),
                 Padding(
-                  padding: const EdgeInsets.only(left: 15.0, bottom: 12.0),
+                  padding: EdgeInsets.only(
+                      left: 15.0, bottom: 12.0, top: screen.height * 0.05),
                   child: Text(
                     "How many asthma patients do you currently have?",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     textAlign: TextAlign.left,
                   ),
                 ),
-                SizedBox(height: 10),
                 Container(
                     child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -163,15 +221,16 @@ class SurveyIntro extends StatelessWidget {
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 12.0, vertical: 12.0),
-                            hintText: "Please enter your current solution",
+                            hintText:
+                                "Please your current number of asthma patients",
                             hintStyle: TextStyle(
                                 color: Color(0xFF787878), fontSize: 13)),
                       )),
                 )),
               ]),
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+            padding: EdgeInsets.symmetric(
+                horizontal: 20.0, vertical: screen.height * 0.175),
             child: Container(
               alignment: Alignment.bottomRight,
               child: RaisedButton(
@@ -182,7 +241,7 @@ class SurveyIntro extends StatelessWidget {
                     return SurveyExtended();
                   })),
                 ],
-                color: Colors.lightBlueAccent,
+                color: Color(0xFF426CB4),
                 child: Text("Next!",
                     style: TextStyle(
                         fontFamily: 'Poppins-Medium',
@@ -197,62 +256,18 @@ class SurveyIntro extends StatelessWidget {
   }
 }
 
-class LinearSurveyPage extends StatelessWidget {
-  String _encode(Object object) =>
-      const JsonEncoder.withIndent(' ').convert(object);
-
-  void resultCallback(RPTaskResult result) {
-    // Do anything with the result
-    print(_encode(result));
-  }
-
-  void cancelCallBack(RPTaskResult result) {
-    // Do anything with the result at the moment of the cancellation
-    print("The result so far:\n" + _encode(result));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RPUITask(
-      task: surveyTask,
-      onSubmit: (result) {
-        resultCallback(result);
-      },
-    );
-  }
-}
-
-class LinearSurveyPage2 extends StatelessWidget {
-  String _encode(Object object) =>
-      const JsonEncoder.withIndent(' ').convert(object);
-
-  void resultCallback(RPTaskResult result) {
-    // Do anything with the result
-    print(_encode(result));
-  }
-
-  void cancelCallBack(RPTaskResult result) {
-    // Do anything with the result at the moment of the cancellation
-    print("The result so far:\n" + _encode(result));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RPUITask(
-      task: surveyTask2,
-      onSubmit: (result) {
-        resultCallback(result);
-      },
-    );
-  }
-}
-
-class SurveyExtended extends StatelessWidget {
+class SurveyExtended extends StatefulWidget {
   const SurveyExtended({Key key}) : super(key: key);
 
   @override
+  _SurveyExtendedState createState() => _SurveyExtendedState();
+}
+
+class _SurveyExtendedState extends State<SurveyExtended> {
+  @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
+    boolChoices initial = boolChoices.no;
     return Scaffold(
       body: ListView(
         children: [
@@ -269,17 +284,71 @@ class SurveyExtended extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: 'Poppins-Medium',
                           fontSize: 25,
-                          color: Colors.lightBlueAccent,
+                          color: Color(0xFF426CB4),
                         )),
                   ),
                 ),
-                Container(
-                    height: screen.height * 0.39, child: LinearSurveyPage2()),
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: EdgeInsets.only(
+                      left: 15.0, bottom: 0.0, top: screen.height * 0.025),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Would you be interested in signing up?",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        width: screen.width * 0.9,
+                        child: Card(
+                            elevation: 5.0,
+                            child: Container(
+                                height: 125,
+                                width: screen.width * 0.7,
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      title: Text('Yes',
+                                          style: TextStyle(fontSize: 15)),
+                                      leading: Radio(
+                                        value: boolChoices.yes,
+                                        groupValue: initial,
+                                        onChanged: (boolChoices value) {
+                                          setState(() {
+                                            initial = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    ListTile(
+                                      title: Text('No',
+                                          style: TextStyle(fontSize: 15)),
+                                      leading: Radio(
+                                        value: boolChoices.no,
+                                        groupValue: initial,
+                                        onChanged: (boolChoices value) {
+                                          setState(() {
+                                            initial = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ))),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: 15.0, bottom: 12.0, top: screen.height * 0.05),
                   child: Text(
-                    "Your Name",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                    "Your name",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -297,17 +366,17 @@ class SurveyExtended extends StatelessWidget {
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 12.0, vertical: 12.0),
-                            hintText: "Please enter your name",
+                            hintText: "Please enter your full name",
                             hintStyle: TextStyle(
                                 color: Color(0xFF787878), fontSize: 13)),
                       )),
                 )),
-                SizedBox(height: 25),
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: EdgeInsets.only(
+                      left: 15.0, bottom: 12.0, top: screen.height * 0.05),
                   child: Text(
-                    "Your Email",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                    "Your email",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -330,12 +399,12 @@ class SurveyExtended extends StatelessWidget {
                                 color: Color(0xFF787878), fontSize: 13)),
                       )),
                 )),
-                SizedBox(height: 25),
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: EdgeInsets.only(
+                      left: 15.0, bottom: 12.0, top: screen.height * 0.05),
                   child: Text(
-                    "Your Phone Number",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                    "Your phone number",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -358,11 +427,10 @@ class SurveyExtended extends StatelessWidget {
                                 color: Color(0xFF787878), fontSize: 13)),
                       )),
                 )),
-                SizedBox(height: 25),
               ]),
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+            padding: EdgeInsets.symmetric(
+                horizontal: 20.0, vertical: screen.height * 0.11),
             child: Container(
               alignment: Alignment.bottomRight,
               child: RaisedButton(
@@ -370,36 +438,10 @@ class SurveyExtended extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20)),
                 onPressed: () => [
                   Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return Scaffold(
-                      body: SafeArea(
-                        child: Column(children: [
-                          Container(
-                            alignment: Alignment.topLeft,
-                            margin: EdgeInsets.all(12),
-                            child: Text.rich(
-                              TextSpan(
-                                  text: 'keva health',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins-Medium',
-                                    fontSize: 25,
-                                    color: Colors.lightBlueAccent,
-                                  )),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text(
-                              "Thank you for completing our survey! We will be in touch with more details soon.",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          )
-                        ]),
-                      ),
-                    );
-                    ;
+                    return SurveyComplete();
                   })),
                 ],
-                color: Colors.lightBlueAccent,
+                color: Color(0xFF426CB4),
                 child: Text("Next!",
                     style: TextStyle(
                         fontFamily: 'Poppins-Medium',
@@ -411,5 +453,49 @@ class SurveyExtended extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class SurveyComplete extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Size screen = MediaQuery.of(context).size;
+    return Scaffold(
+        body: ListView(children: [
+      Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            alignment: Alignment.topLeft,
+            margin: EdgeInsets.all(12),
+            child: Text.rich(
+              TextSpan(
+                  text: 'keva health',
+                  style: TextStyle(
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 25,
+                    color: Color(0xFF426CB4),
+                  )),
+            ),
+          ),
+          SingleChildScrollView(
+            child: Column(children: [
+              Image.asset(
+                'assets/graphic.png',
+                scale: 2.0,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: screen.width * 0.075),
+                child: Text(
+                  "Thank you for completing our survey!",
+                  style: TextStyle(fontSize: 25),
+                ),
+              )
+            ]),
+          )
+        ],
+      )
+    ]));
   }
 }

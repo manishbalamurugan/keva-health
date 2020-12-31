@@ -19,7 +19,7 @@ class DemoPage extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: 'Poppins-Medium',
                     fontSize: 25,
-                    color: Colors.lightBlueAccent,
+                    color: Color(0xFF426CB4),
                   )),
             ),
           ),
@@ -111,7 +111,7 @@ class _VideoPlayerRemoteState extends State<VideoPlayerRemote> {
                 })),
                 _controller.pause()
               ],
-              color: Colors.lightBlueAccent,
+              color: Color(0xFF426CB4),
               child: Text("Ok, let's do it!",
                   style: TextStyle(
                       fontFamily: 'Poppins-Medium',

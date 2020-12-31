@@ -33,7 +33,7 @@ class SplashPage extends StatelessWidget {
                               style: TextStyle(
                                 fontFamily: 'Poppins-Medium',
                                 fontSize: 45,
-                                color: Colors.lightBlueAccent,
+                                color: Color(0xFF426CB4),
                               )),
                         ],
                       ),
@@ -64,7 +64,7 @@ class SplashPage extends StatelessWidget {
                     return DemoPage();
                   }));
                 },
-                color: Colors.lightBlueAccent,
+                color: Color(0xFF426CB4),
                 child: Text("Let's get started",
                     style: TextStyle(
                         fontFamily: 'Poppins-Medium',
