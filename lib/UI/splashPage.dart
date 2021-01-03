@@ -24,7 +24,7 @@ class SplashPage extends StatelessWidget {
                         text: 'Meet\n',
                         style: TextStyle(
                           fontFamily: 'Poppins-Normal',
-                          fontSize: 45,
+                          fontSize: screen.width * 0.1,
                           color: Colors.black,
                         ),
                         children: <TextSpan>[
@@ -32,7 +32,7 @@ class SplashPage extends StatelessWidget {
                               text: 'Keva Platform',
                               style: TextStyle(
                                 fontFamily: 'Poppins-Medium',
-                                fontSize: 45,
+                                fontSize: screen.width * 0.1,
                                 color: Color(0xFF426CB4),
                               )),
                         ],
@@ -43,7 +43,7 @@ class SplashPage extends StatelessWidget {
                       'your solution for respiratory disease management',
                       style: TextStyle(
                           fontFamily: 'Poppins-Normal',
-                          fontSize: 20,
+                          fontSize: screen.width * 0.05,
                           color: Colors.grey[800]),
                     ),
                   ],
@@ -52,13 +52,13 @@ class SplashPage extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.only(top: screen.height * 0.375),
+              margin: EdgeInsets.only(top: screen.height * 0.275),
               child: RaisedButton(
                 padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.25,
+                    horizontal: screen.width * 0.1,
                     vertical: screen.height * 0.01),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(30)),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (_) {
                     return DemoPage();
@@ -69,7 +69,7 @@ class SplashPage extends StatelessWidget {
                     style: TextStyle(
                         fontFamily: 'Poppins-Medium',
                         color: Colors.white,
-                        fontSize: 16)),
+                        fontSize: screen.width * 0.03)),
               ),
             )
           ],

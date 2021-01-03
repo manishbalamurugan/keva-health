@@ -18,7 +18,7 @@ class DemoPage extends StatelessWidget {
                   text: 'keva health',
                   style: TextStyle(
                     fontFamily: 'Poppins-Medium',
-                    fontSize: 25,
+                    fontSize: screen.width * 0.0375,
                     color: Color(0xFF426CB4),
                   )),
             ),
@@ -98,13 +98,13 @@ class _VideoPlayerRemoteState extends State<VideoPlayerRemote> {
           ),
           Container(
             alignment: Alignment.bottomCenter,
-            margin: EdgeInsets.only(top: screen.height * 0.325),
+            margin: EdgeInsets.only(top: screen.height * 0.125),
             child: RaisedButton(
               padding: EdgeInsets.symmetric(
-                  horizontal: screen.width * 0.25,
+                  horizontal: screen.width * 0.125,
                   vertical: screen.height * 0.01),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
+                  borderRadius: BorderRadius.circular(30)),
               onPressed: () => [
                 Navigator.push(context, MaterialPageRoute(builder: (_) {
                   return SurveyPage();
@@ -116,7 +116,7 @@ class _VideoPlayerRemoteState extends State<VideoPlayerRemote> {
                   style: TextStyle(
                       fontFamily: 'Poppins-Medium',
                       color: Colors.white,
-                      fontSize: 16)),
+                      fontSize: screen.width * 0.03)),
             ),
           )
         ],

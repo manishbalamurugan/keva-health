@@ -11,8 +11,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Keva Health',
-        theme: ThemeData(
-            fontFamily: 'Poppins-Normal', canvasColor: Colors.white),
+        debugShowCheckedModeBanner: false,
+        theme:
+            ThemeData(fontFamily: 'Poppins-Normal', canvasColor: Colors.white),
         home: SplashPage());
   }
 }
