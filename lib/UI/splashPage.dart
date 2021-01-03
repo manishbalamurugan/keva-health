@@ -13,7 +13,7 @@ class SplashPage extends StatelessWidget {
               padding: EdgeInsets.only(top: screen.height * 0.2),
               child: Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.symmetric(horizontal: 20),
+                margin: EdgeInsets.symmetric(horizontal: screen.width * 0.1),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
