@@ -13,7 +13,10 @@ class MyApp extends StatelessWidget {
         title: 'Keva Health',
         debugShowCheckedModeBanner: false,
         theme:
-            ThemeData(fontFamily: 'Poppins-Normal', canvasColor: Colors.white),
+            ThemeData(fontFamily: 'Poppins-Normal', canvasColor: Colors.white,
+            
+            ),
+            
         home: SplashPage());
   }
 }

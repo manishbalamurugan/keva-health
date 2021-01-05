@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:keva_health/UI/demoPage.dart';
 
 class SplashPage extends StatelessWidget {
@@ -13,7 +14,7 @@ class SplashPage extends StatelessWidget {
               padding: EdgeInsets.only(top: screen.height * 0.2),
               child: Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.symmetric(horizontal: screen.width * 0.1),
+                margin: EdgeInsets.symmetric(horizontal: screen.width * 0.05),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +25,7 @@ class SplashPage extends StatelessWidget {
                         text: 'Meet\n',
                         style: TextStyle(
                           fontFamily: 'Poppins-Normal',
-                          fontSize: screen.width * 0.1,
+                          fontSize: screen.height * 0.065,
                           color: Colors.black,
                         ),
                         children: <TextSpan>[
@@ -32,7 +33,7 @@ class SplashPage extends StatelessWidget {
                               text: 'Keva Platform',
                               style: TextStyle(
                                 fontFamily: 'Poppins-Medium',
-                                fontSize: screen.width * 0.1,
+                                fontSize: screen.height * 0.065,
                                 color: Color(0xFF426CB4),
                               )),
                         ],
@@ -52,7 +53,7 @@ class SplashPage extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.only(top: screen.height * 0.275),
+              margin: EdgeInsets.only(top: screen.height * 0.375),
               child: RaisedButton(
                 padding: EdgeInsets.symmetric(
                     horizontal: screen.width * 0.1,
@@ -69,12 +70,38 @@ class SplashPage extends StatelessWidget {
                     style: TextStyle(
                         fontFamily: 'Poppins-Medium',
                         color: Colors.white,
-                        fontSize: screen.width * 0.03)),
+                        fontSize: screen.height * 0.025)),
               ),
             )
           ],
         ),
       ),
+    );
+  }
+}
+
+class Survey extends StatefulWidget {
+  Survey({Key key}) : super(key: key);
+
+  @override
+  _SurveyState createState() => _SurveyState();
+}
+
+class _SurveyState extends State<Survey> {
+  final _formKey = GlobalKey<FormBuilderState>();
+  @override
+  Widget build(BuildContext context) {
+    return FormBuilder(
+      key: _formKey,
+      child: Column(children: <Widget>[
+       FormBuilderTextField(
+                  name: 'full_name',
+                  decoration: InputDecoration(labelText: 'Full Name'),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(context),
+                  ]),
+                ),
+      ]),
     );
   }
 }

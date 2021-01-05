@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:keva_health/UI/demoPage.dart';
+import 'package:keva_health/UI/surveyComplete.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SurveyPage extends StatelessWidget {
   @override
@@ -19,7 +21,7 @@ class SurveyPage extends StatelessWidget {
                     text: 'keva health',
                     style: TextStyle(
                       fontFamily: 'Poppins-Medium',
-                      fontSize: screen.width * 0.0375,
+                      fontSize: screen.height * 0.0375,
                       color: Color(0xFF426CB4),
                     )),
               ),
@@ -42,7 +44,7 @@ class SurveyPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () => [
                     Navigator.push(context, MaterialPageRoute(builder: (_) {
-                      return SurveyIntro();
+                      return Survey();
                     })),
                   ],
                   color: Color(0xFF426CB4),
@@ -50,7 +52,7 @@ class SurveyPage extends StatelessWidget {
                       style: TextStyle(
                           fontFamily: 'Poppins-Medium',
                           color: Colors.white,
-                          fontSize: screen.width * 0.03)),
+                          fontSize: screen.height * 0.02)),
                 ),
               ),
             )
@@ -78,7 +80,7 @@ class UserSurvey extends StatelessWidget {
           padding: EdgeInsets.all(screen.width * 0.05),
           child: Text(
             "Please fill out this questionnaire if you're interested in learning more about Keva Platform!",
-            style: TextStyle(fontSize: screen.height * 0.02),
+            style: TextStyle(fontSize: screen.height * 0.0225),
           ),
         )
       ]),
@@ -86,516 +88,858 @@ class UserSurvey extends StatelessWidget {
   }
 }
 
-enum boolChoices { yes, no }
-
-class SurveyIntro extends StatefulWidget {
-  const SurveyIntro({Key key}) : super(key: key);
+class Survey extends StatefulWidget {
+  Survey({Key key}) : super(key: key);
 
   @override
-  _SurveyIntroState createState() => _SurveyIntroState();
+  _SurveyState createState() => _SurveyState();
 }
 
-class _SurveyIntroState extends State<SurveyIntro> {
-  boolChoices initial = boolChoices.no;
+class _SurveyState extends State<Survey> {
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
     return Scaffold(
-      body: ListView(
-        children: [
-          Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  alignment: Alignment.topLeft,
-                  margin: EdgeInsets.all(12),
-                  child: Text.rich(
-                    TextSpan(
-                        text: 'keva health',
-                        style: TextStyle(
-                          fontFamily: 'Poppins-Medium',
-                          fontSize: screen.width * 0.0375,
-                          color: Color(0xFF426CB4),
-                        )),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: 15.0, bottom: 12.0, top: screen.height * 0.075),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Do you have an RPM solution?",
-                        style: TextStyle(
-                            fontSize: screen.width * 0.025,
-                            fontWeight: FontWeight.w500),
-                        textAlign: TextAlign.left,
-                      ),
-                      SizedBox(height: screen.height * 0.0125),
-                      Container(
-                        width: screen.width * 0.9,
-                        height: screen.height * 0.15,
-                        child: Card(
-                            elevation: 5.0,
-                            child: Container(
-                                height: screen.height * 0.125,
-                                width: screen.width * 0.7,
-                                child: Column(
-                                  children: [
-                                    ListTile(
-                                      title: Text('Yes',
-                                          style: TextStyle(
-                                              fontSize: screen.width * 0.02)),
-                                      leading: Radio(
-                                        value: boolChoices.yes,
-                                        groupValue: initial,
-                                        onChanged: (boolChoices value) {
-                                          setState(() {
-                                            initial = value;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    ListTile(
-                                      title: Text('No',
-                                          style: TextStyle(
-                                              fontSize: screen.width * 0.02)),
-                                      leading: Radio(
-                                        value: boolChoices.no,
-                                        groupValue: initial,
-                                        onChanged: (boolChoices value) {
-                                          setState(() {
-                                            initial = value;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ))),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: 15.0, bottom: 12.0, top: screen.height * 0.075),
-                  child: Text(
-                    "If yes, what's the name of your current solution?",
-                    style: TextStyle(
-                        fontSize: screen.width * 0.025,
-                        fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                Container(
-                    child: Padding(
-                  padding: EdgeInsets.only(left: 15.0),
-                  child: Container(
-                    width: screen.width * 0.9,
-                    child: Card(
-                        elevation: 5.0,
-                        child: TextFormField(
-                          validator: (String l) =>
-                              null, //Links, while recommended, aren't needed if description covers it
-                          style: TextStyle(color: Colors.black),
-                          cursorColor: Colors.black,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12.0, vertical: 12.0),
-                              hintText: "Please enter your current solution",
-                              hintStyle: TextStyle(
-                                  color: Color(0xFF787878),
-                                  fontSize: screen.width * 0.02)),
-                        )),
-                  ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text.rich(
+            TextSpan(
+                text: 'keva health',
+                style: TextStyle(
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: screen.height * 0.0375,
+                  color: Color(0xFF426CB4),
                 )),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: 15.0, bottom: 12.0, top: screen.height * 0.075),
-                  child: Text(
-                    "How many asthma patients do you currently have?",
-                    style: TextStyle(
-                        fontSize: screen.width * 0.025,
-                        fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                Container(
-                    child: Padding(
-                  padding: EdgeInsets.only(left: 15.0),
-                  child: Container(
-                    width: screen.width * 0.9,
-                    child: Card(
-                        elevation: 5.0,
-                        child: TextFormField(
-                          validator: (String l) =>
-                              null, //Links, while recommended, aren't needed if description covers it
-                          style: TextStyle(color: Colors.black),
-                          cursorColor: Colors.black,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12.0, vertical: 12.0),
-                              hintText: "Please enter your current solution",
-                              hintStyle: TextStyle(
-                                  color: Color(0xFF787878),
-                                  fontSize: screen.width * 0.02)),
-                        )),
-                  ),
-                )),
-              ]),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: 20.0, vertical: screen.height * 0.175),
-            child: Container(
-              alignment: Alignment.bottomRight,
-              child: RaisedButton(
-                padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
-                    vertical: screen.height * 0.01),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
-                onPressed: () => [
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return SurveyExtended();
-                  })),
-                ],
-                color: Color(0xFF426CB4),
-                child: Text("Next!",
-                    style: TextStyle(
-                        fontFamily: 'Poppins-Medium',
-                        color: Colors.white,
-                        fontSize: screen.width * 0.03)),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+          ),
+        ),
+        body: SafeArea(
+          child: ListView(children: <Widget>[Center(child: UserDetails())]),
+        ));
   }
 }
 
-class SurveyExtended extends StatefulWidget {
-  const SurveyExtended({Key key}) : super(key: key);
+class UserDetails extends StatefulWidget {
+  UserDetails({Key key}) : super(key: key);
 
   @override
-  _SurveyExtendedState createState() => _SurveyExtendedState();
+  _UserDetailsState createState() => _UserDetailsState();
 }
 
-class _SurveyExtendedState extends State<SurveyExtended> {
+class _UserDetailsState extends State<UserDetails> {
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
-    boolChoices initial = boolChoices.no;
-    return Scaffold(
-      body: ListView(
-        children: [
-          Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  alignment: Alignment.topLeft,
-                  margin: EdgeInsets.all(12),
-                  child: Text.rich(
-                    TextSpan(
-                        text: 'keva health',
-                        style: TextStyle(
-                          fontFamily: 'Poppins-Medium',
-                          fontSize: 25,
-                          color: Color(0xFF426CB4),
-                        )),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: 15.0, bottom: 12.0, top: screen.height * 0.075),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Would you be interested in signing up?",
-                        style: TextStyle(
-                            fontSize: screen.width * 0.025,
-                            fontWeight: FontWeight.w500),
-                        textAlign: TextAlign.left,
-                      ),
-                      SizedBox(height: screen.height * 0.0125),
-                      Container(
-                        width: screen.width * 0.9,
-                        height: screen.height * 0.15,
-                        child: Card(
-                            elevation: 5.0,
-                            child: Container(
-                                height: screen.height * 0.125,
-                                width: screen.width * 0.7,
-                                child: Column(
-                                  children: [
-                                    ListTile(
-                                      title: Text('Yes',
-                                          style: TextStyle(
-                                              fontSize: screen.width * 0.02)),
-                                      leading: Radio(
-                                        value: boolChoices.yes,
-                                        groupValue: initial,
-                                        onChanged: (boolChoices value) {
-                                          setState(() {
-                                            initial = value;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    ListTile(
-                                      title: Text('No',
-                                          style: TextStyle(
-                                              fontSize: screen.width * 0.02)),
-                                      leading: Radio(
-                                        value: boolChoices.no,
-                                        groupValue: initial,
-                                        onChanged: (boolChoices value) {
-                                          setState(() {
-                                            initial = value;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ))),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: 15.0, bottom: 12.0, top: screen.height * 0.05),
-                  child: Text(
-                    "Your name",
-                    style: TextStyle(
-                        fontSize: screen.width * 0.025,
-                        fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                Container(
-                    child: Padding(
-                  padding: EdgeInsets.only(left: 15.0),
-                  child: Container(
-                    width: screen.width * 0.9,
-                    child: Card(
-                        elevation: 5.0,
-                        child: TextFormField(
-                          validator: (String l) =>
-                              null, //Links, while recommended, aren't needed if description covers it
-                          style: TextStyle(color: Colors.black),
-                          cursorColor: Colors.black,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12.0, vertical: 12.0),
-                              hintText: "Please enter your name",
-                              hintStyle: TextStyle(
-                                  color: Color(0xFF787878),
-                                  fontSize: screen.width * 0.02)),
-                        )),
-                  ),
-                )),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: 15.0, bottom: 12.0, top: screen.height * 0.05),
-                  child: Text(
-                    "Your email",
-                    style: TextStyle(
-                        fontSize: screen.width * 0.025,
-                        fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                Container(
-                    child: Padding(
-                  padding: EdgeInsets.only(left: 15.0),
-                  child: Container(
-                    width: screen.width * 0.9,
-                    child: Card(
-                        elevation: 5.0,
-                        child: TextFormField(
-                          validator: (String l) =>
-                              null, //Links, while recommended, aren't needed if description covers it
-                          style: TextStyle(color: Colors.black),
-                          cursorColor: Colors.black,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12.0, vertical: 12.0),
-                              hintText: "Please enter your email",
-                              hintStyle: TextStyle(
-                                  color: Color(0xFF787878),
-                                  fontSize: screen.width * 0.02)),
-                        )),
-                  ),
-                )),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: 15.0, bottom: 12.0, top: screen.height * 0.05),
-                  child: Text(
-                    "Your phone number",
-                    style: TextStyle(
-                        fontSize: screen.width * 0.025,
-                        fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                Container(
-                    child: Padding(
-                  padding: EdgeInsets.only(left: 15.0),
-                  child: Container(
-                    width: screen.width * 0.9,
-                    child: Card(
-                        elevation: 5.0,
-                        child: TextFormField(
-                          validator: (String l) =>
-                              null, //Links, while recommended, aren't needed if description covers it
-                          style: TextStyle(color: Colors.black),
-                          cursorColor: Colors.black,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12.0, vertical: 12.0),
-                              hintText: "Please enter your phone number",
-                              hintStyle: TextStyle(
-                                  color: Color(0xFF787878),
-                                  fontSize: screen.width * 0.02)),
-                        )),
-                  ),
-                )),
-              ]),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: 20.0, vertical: screen.height * 0.075),
-            child: Container(
-              alignment: Alignment.bottomRight,
-              child: RaisedButton(
-                padding: EdgeInsets.symmetric(
-                    horizontal: screen.width * 0.05,
-                    vertical: screen.height * 0.01),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
-                onPressed: () => [
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return SurveyComplete();
-                  })),
-                ],
-                color: Color(0xFF426CB4),
-                child: Text("Next!",
-                    style: TextStyle(
-                        fontFamily: 'Poppins-Medium',
-                        color: Colors.white,
-                        fontSize: screen.width * 0.03)),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class SurveyComplete extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    Size screen = MediaQuery.of(context).size;
-    return Scaffold(
-        body: ListView(children: [
-      Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            alignment: Alignment.topLeft,
-            margin: EdgeInsets.all(12),
-            child: Text.rich(
-              TextSpan(
-                  text: 'keva health',
+    return Column(
+      children: [
+        Container(
+          height: screen.height * 0.5,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Your name",
+                            style: TextStyle(
+                                fontSize: screen.height * 0.025,
+                                fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.left,
+                          ),
+                          Container(
+                            width: screen.width * 0.9,
+                            child: Card(
+                                elevation: 5.0,
+                                child: TextFormField(
+                                  validator: (String l) =>
+                                      null, //Links, while recommended, aren't needed if description covers it
+                                  style: TextStyle(color: Colors.black),
+                                  cursorColor: Colors.black,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: screen.width * 0.05,
+                                          vertical: screen.height * 0.0125),
+                                      hintText: "Please enter your name",
+                                      hintStyle: TextStyle(
+                                          color: Color(0xFF787878),
+                                          fontSize: screen.height * 0.015)),
+                                )),
+                          ),
+                        ]),
+                    SizedBox(height: screen.height * 0.05),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Your email",
+                            style: TextStyle(
+                                fontSize: screen.height * 0.025,
+                                fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.left,
+                          ),
+                          Container(
+                            width: screen.width * 0.9,
+                            child: Card(
+                                elevation: 5.0,
+                                child: TextFormField(
+                                  validator: (String l) =>
+                                      null, //Links, while recommended, aren't needed if description covers it
+                                  style: TextStyle(color: Colors.black),
+                                  cursorColor: Colors.black,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: screen.width * 0.05,
+                                          vertical: screen.height * 0.0125),
+                                      hintText: "Please enter your email",
+                                      hintStyle: TextStyle(
+                                          color: Color(0xFF787878),
+                                          fontSize: screen.height * 0.015)),
+                                )),
+                          ),
+                        ]),
+                    SizedBox(height: screen.height * 0.05),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Your phone number",
+                            style: TextStyle(
+                                fontSize: screen.height * 0.025,
+                                fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.left,
+                          ),
+                          Container(
+                            width: screen.width * 0.9,
+                            child: Card(
+                                elevation: 5.0,
+                                child: TextFormField(
+                                  validator: (String l) =>
+                                      null, //Links, while recommended, aren't needed if description covers it
+                                  style: TextStyle(color: Colors.black),
+                                  cursorColor: Colors.black,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: screen.width * 0.05,
+                                          vertical: screen.height * 0.0125),
+                                      hintText:
+                                          "Please enter your phone number",
+                                      hintStyle: TextStyle(
+                                          color: Color(0xFF787878),
+                                          fontSize: screen.height * 0.015)),
+                                )),
+                          ),
+                        ]),
+                  ]),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: screen.height * 0.25, horizontal: screen.width * 0.05),
+          child: Container(
+            alignment: Alignment.bottomRight,
+            child: RaisedButton(
+              padding: EdgeInsets.symmetric(
+                  horizontal: screen.height * 0.04,
+                  vertical: screen.height * 0.0125),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              onPressed: () => [
+                Navigator.push(context, MaterialPageRoute(builder: (_) {
+                  return InitialQuestion();
+                })),
+              ],
+              color: Color(0xFF426CB4),
+              child: Text("Next!",
                   style: TextStyle(
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: screen.width * 0.0375,
-                    color: Color(0xFF426CB4),
-                  )),
+                      fontFamily: 'Poppins-Medium',
+                      color: Colors.white,
+                      fontSize: screen.height * 0.025)),
             ),
           ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(top: screen.height * 0.1),
-              child: Column(children: [
-                Container(
-                  height: screen.height * 0.5,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/graphic.jpg'),
-                        fit: BoxFit.contain),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screen.width * 0.075,
-                      top: screen.height * 0.075,
-                      bottom: screen.height * 0.02),
-                  child: Text(
-                    "Thank you for completing our survey! We appreciate the feedback.",
-                    style: TextStyle(fontSize: screen.height * 0.02),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: RaisedButton(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: screen.width * 0.05,
-                        vertical: screen.height * 0.01),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    onPressed: _launchURL,
-                    color: Color(0xFF426CB4),
-                    child: Text("Learn more!",
-                        style: TextStyle(
-                            fontFamily: 'Poppins-Medium',
-                            color: Colors.white,
-                            fontSize: screen.width * 0.0375)),
-                  ),
-                ),
-                SizedBox(
-                  height: 5.0,
-                ),
-                GestureDetector(
-                  onTap: () => [
-                    Navigator.push(context, MaterialPageRoute(builder: (_) {
-                      return DemoPage();
-                    })),
-                  ],
-                  child: Text(
-                    "Submit another response",
-                    style: TextStyle(
-                        fontSize: screen.height * 0.0125,
-                        color: Colors.grey[600]),
-                  ),
-                ),
-              ]),
-            ),
-          )
-        ],
-      )
-    ]));
+        ),
+      ],
+    );
   }
 }
 
-_launchURL() async {
-  const url = 'https://www.kevahealth.com/';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
+enum boolChoices { yes, no }
+
+class InitialQuestion extends StatefulWidget {
+  InitialQuestion({Key key}) : super(key: key);
+
+  @override
+  _InitialQuestionState createState() => _InitialQuestionState();
+}
+
+class _InitialQuestionState extends State<InitialQuestion> {
+  boolChoices initial;
+  @override
+  Widget build(BuildContext context) {
+    Size screen = MediaQuery.of(context).size;
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text.rich(
+            TextSpan(
+                text: 'keva health',
+                style: TextStyle(
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: screen.height * 0.0375,
+                  color: Color(0xFF426CB4),
+                )),
+          ),
+        ),
+        body: SafeArea(
+          child: ListView(children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: screen.height * 0.125),
+              child: Card(
+                margin: EdgeInsets.all(12),
+                elevation: 5.0,
+                child: Column(children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: screen.width * 0.05),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Text(
+                        "Are you interested in learning about a 1 month, no commitment trial of the Keva Platform?",
+                        style: TextStyle(
+                            fontSize: screen.height * 0.025,
+                            fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ),
+                  RadioListTile(
+                    title: Text(
+                      'Yes',
+                      style: TextStyle(
+                        fontSize: screen.height * 0.025,
+                        color: Colors.black,
+                      ),
+                    ),
+                    value: boolChoices.yes,
+                    groupValue: initial,
+                    onChanged: (boolChoices value) {
+                      setState(() {
+                        initial = value;
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    title: Text(
+                      'No',
+                      style: TextStyle(
+                        fontSize: screen.height * 0.025,
+                        color: Colors.black,
+                      ),
+                    ),
+                    value: boolChoices.no,
+                    groupValue: initial,
+                    onChanged: (boolChoices value) {
+                      setState(() {
+                        initial = value;
+                      });
+                    },
+                  )
+                ]),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: screen.height * 0.325,
+                  horizontal: screen.width * 0.05),
+              child: Container(
+                alignment: Alignment.bottomRight,
+                child: RaisedButton(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: screen.height * 0.04,
+                      vertical: screen.height * 0.0125),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  onPressed: () => [
+                    initial == boolChoices.yes
+                        ? Navigator.push(context,
+                            MaterialPageRoute(builder: (_) {
+                            return SurveyComplete();
+                          }))
+                        : Navigator.push(context,
+                            MaterialPageRoute(builder: (_) {
+                            return SecondaryQuestion();
+                          }))
+                  ],
+                  color: Color(0xFF426CB4),
+                  child: Text("Next!",
+                      style: TextStyle(
+                          fontFamily: 'Poppins-Medium',
+                          color: Colors.white,
+                          fontSize: screen.height * 0.025)),
+                ),
+              ),
+            ),
+          ]),
+        ));
+  }
+}
+
+class SecondaryQuestion extends StatefulWidget {
+  SecondaryQuestion({Key key}) : super(key: key);
+
+  @override
+  _SecondaryQuestionState createState() => _SecondaryQuestionState();
+}
+
+class _SecondaryQuestionState extends State<SecondaryQuestion> {
+  boolChoices initial;
+  @override
+  Widget build(BuildContext context) {
+    Size screen = MediaQuery.of(context).size;
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text.rich(
+            TextSpan(
+                text: 'keva health',
+                style: TextStyle(
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: screen.height * 0.0375,
+                  color: Color(0xFF426CB4),
+                )),
+          ),
+        ),
+        body: SafeArea(
+          child: ListView(children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: screen.height * 0.125),
+              child: Card(
+                margin: EdgeInsets.all(12),
+                elevation: 5.0,
+                child: Column(children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: screen.width * 0.05),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Text(
+                        "Are you interested in seeing a quick demo of the Keva Platform? It shouldn't take more than 15 minutes",
+                        style: TextStyle(
+                            fontSize: screen.height * 0.025,
+                            fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ),
+                  RadioListTile(
+                    title: Text(
+                      'Yes',
+                      style: TextStyle(
+                        fontSize: screen.height * 0.025,
+                        color: Colors.black,
+                      ),
+                    ),
+                    value: boolChoices.yes,
+                    groupValue: initial,
+                    onChanged: (boolChoices value) {
+                      setState(() {
+                        initial = value;
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    title: Text(
+                      'No',
+                      style: TextStyle(
+                        fontSize: screen.height * 0.025,
+                        color: Colors.black,
+                      ),
+                    ),
+                    value: boolChoices.no,
+                    groupValue: initial,
+                    onChanged: (boolChoices value) {
+                      setState(() {
+                        initial = value;
+                      });
+                    },
+                  )
+                ]),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: screen.height * 0.3,
+                  horizontal: screen.width * 0.05),
+              child: Container(
+                alignment: Alignment.bottomRight,
+                child: RaisedButton(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: screen.height * 0.04,
+                      vertical: screen.height * 0.0125),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  onPressed: () => [
+                    initial == boolChoices.yes
+                        ? Navigator.push(context,
+                            MaterialPageRoute(builder: (_) {
+                            return SurveyComplete();
+                          }))
+                        : Navigator.push(context,
+                            MaterialPageRoute(builder: (_) {
+                            return RPMQuestion();
+                          }))
+                  ],
+                  color: Color(0xFF426CB4),
+                  child: Text("Next!",
+                      style: TextStyle(
+                          fontFamily: 'Poppins-Medium',
+                          color: Colors.white,
+                          fontSize: screen.height * 0.025)),
+                ),
+              ),
+            ),
+          ]),
+        ));
+  }
+}
+
+class RPMQuestion extends StatefulWidget {
+  RPMQuestion({Key key}) : super(key: key);
+
+  @override
+  _RPMQuestionState createState() => _RPMQuestionState();
+}
+
+class _RPMQuestionState extends State<RPMQuestion> {
+  boolChoices initial;
+  @override
+  Widget build(BuildContext context) {
+    Size screen = MediaQuery.of(context).size;
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text.rich(
+            TextSpan(
+                text: 'keva health',
+                style: TextStyle(
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: screen.height * 0.0375,
+                  color: Color(0xFF426CB4),
+                )),
+          ),
+        ),
+        body: SafeArea(
+          child: ListView(children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: screen.height * 0.125),
+              child: Card(
+                margin: EdgeInsets.all(12),
+                elevation: 5.0,
+                child: Column(children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: screen.width * 0.05),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Text(
+                        "Does your practice currently use an RPM?",
+                        style: TextStyle(
+                            fontSize: screen.height * 0.025,
+                            fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ),
+                  RadioListTile(
+                    title: Text(
+                      'Yes',
+                      style: TextStyle(
+                        fontSize: screen.height * 0.025,
+                        color: Colors.black,
+                      ),
+                    ),
+                    value: boolChoices.yes,
+                    groupValue: initial,
+                    onChanged: (boolChoices value) {
+                      setState(() {
+                        initial = value;
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    title: Text(
+                      'No',
+                      style: TextStyle(
+                        fontSize: screen.height * 0.025,
+                        color: Colors.black,
+                      ),
+                    ),
+                    value: boolChoices.no,
+                    groupValue: initial,
+                    onChanged: (boolChoices value) {
+                      setState(() {
+                        initial = value;
+                      });
+                    },
+                  )
+                ]),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: screen.height * 0.375,
+                  horizontal: screen.width * 0.05),
+              child: Container(
+                alignment: Alignment.bottomRight,
+                child: RaisedButton(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: screen.height * 0.04,
+                      vertical: screen.height * 0.0125),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  onPressed: () => [
+                    initial == boolChoices.yes
+                        ? Navigator.push(context,
+                            MaterialPageRoute(builder: (_) {
+                            return RPMConditional();
+                          }))
+                        : Navigator.push(context,
+                            MaterialPageRoute(builder: (_) {
+                            return RPMQuestion2();
+                          }))
+                  ],
+                  color: Color(0xFF426CB4),
+                  child: Text("Next!",
+                      style: TextStyle(
+                          fontFamily: 'Poppins-Medium',
+                          color: Colors.white,
+                          fontSize: screen.height * 0.025)),
+                ),
+              ),
+            ),
+          ]),
+        ));
+  }
+}
+
+class RPMConditional extends StatefulWidget {
+  RPMConditional({Key key}) : super(key: key);
+
+  @override
+  _RPMConditionalState createState() => _RPMConditionalState();
+}
+
+class _RPMConditionalState extends State<RPMConditional> {
+  @override
+  Widget build(BuildContext context) {
+    Size screen = MediaQuery.of(context).size;
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text.rich(
+            TextSpan(
+                text: 'keva health',
+                style: TextStyle(
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: screen.height * 0.0375,
+                  color: Color(0xFF426CB4),
+                )),
+          ),
+        ),
+        body: SafeArea(
+          child: ListView(children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: screen.height * 0.125,
+                  horizontal: screen.width * 0.1),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "What RPM solution does your practice currently use?",
+                      style: TextStyle(
+                          fontSize: screen.height * 0.025,
+                          fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.left,
+                    ),
+                    SizedBox(
+                      height: screen.height * 0.025,
+                    ),
+                    Container(
+                      height: screen.height * 0.125,
+                      width: screen.width * 0.9,
+                      child: Card(
+                          elevation: 5.0,
+                          child: TextFormField(
+                            maxLines: 5,
+                            validator: (String l) =>
+                                null, //Links, while recommended, aren't needed if description covers it
+                            style: TextStyle(color: Colors.black),
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: screen.width * 0.05,
+                                    vertical: screen.height * 0.0125),
+                                hintText: "Please enter your response",
+                                hintStyle: TextStyle(
+                                    color: Color(0xFF787878),
+                                    fontSize: screen.height * 0.0175)),
+                          )),
+                    ),
+                  ]),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: screen.height * 0.3,
+                  horizontal: screen.width * 0.05),
+              child: Container(
+                alignment: Alignment.bottomRight,
+                child: RaisedButton(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: screen.height * 0.04,
+                      vertical: screen.height * 0.0125),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  onPressed: () => [
+                    Navigator.push(context, MaterialPageRoute(builder: (_) {
+                      return RPMQuestion2();
+                    }))
+                  ],
+                  color: Color(0xFF426CB4),
+                  child: Text("Next!",
+                      style: TextStyle(
+                          fontFamily: 'Poppins-Medium',
+                          color: Colors.white,
+                          fontSize: screen.height * 0.025)),
+                ),
+              ),
+            ),
+          ]),
+        ));
+  }
+}
+
+class RPMQuestion2 extends StatefulWidget {
+  RPMQuestion2({Key key}) : super(key: key);
+
+  @override
+  _RPMQuestion2State createState() => _RPMQuestion2State();
+}
+
+class _RPMQuestion2State extends State<RPMQuestion2> {
+  @override
+  Widget build(BuildContext context) {
+    Size screen = MediaQuery.of(context).size;
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text.rich(
+            TextSpan(
+                text: 'keva health',
+                style: TextStyle(
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: screen.height * 0.0375,
+                  color: Color(0xFF426CB4),
+                )),
+          ),
+        ),
+        body: SafeArea(
+          child: ListView(children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: screen.height * 0.125,
+                  horizontal: screen.width * 0.1),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Do you think an RPM solution will improve outcomes for your asthma patients?",
+                      style: TextStyle(
+                          fontSize: screen.height * 0.025,
+                          fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.left,
+                    ),
+                    SizedBox(
+                      height: screen.height * 0.025,
+                    ),
+                    Container(
+                      height: screen.height * 0.25,
+                      width: screen.width * 0.9,
+                      child: Card(
+                          elevation: 5.0,
+                          child: TextFormField(
+                            maxLines: 20,
+                            validator: (String l) =>
+                                null, //Links, while recommended, aren't needed if description covers it
+                            style: TextStyle(color: Colors.black),
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: screen.width * 0.05,
+                                    vertical: screen.height * 0.0125),
+                                hintText: "Please enter your response",
+                                hintStyle: TextStyle(
+                                    color: Color(0xFF787878),
+                                    fontSize: screen.height * 0.0175)),
+                          )),
+                    ),
+                  ]),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: screen.height * 0.13,
+                  horizontal: screen.width * 0.05),
+              child: Container(
+                alignment: Alignment.bottomRight,
+                child: RaisedButton(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: screen.height * 0.04,
+                      vertical: screen.height * 0.0125),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  onPressed: () => [
+                    Navigator.push(context, MaterialPageRoute(builder: (_) {
+                      return FinalQuestion();
+                    }))
+                  ],
+                  color: Color(0xFF426CB4),
+                  child: Text("Next!",
+                      style: TextStyle(
+                          fontFamily: 'Poppins-Medium',
+                          color: Colors.white,
+                          fontSize: screen.height * 0.025)),
+                ),
+              ),
+            ),
+          ]),
+        ));
+  }
+}
+
+class FinalQuestion extends StatefulWidget {
+  FinalQuestion({Key key}) : super(key: key);
+
+  @override
+  _FinalQuestionState createState() => _FinalQuestionState();
+}
+
+class _FinalQuestionState extends State<FinalQuestion> {
+  @override
+  Widget build(BuildContext context) {
+    Size screen = MediaQuery.of(context).size;
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text.rich(
+            TextSpan(
+                text: 'keva health',
+                style: TextStyle(
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: screen.height * 0.0375,
+                  color: Color(0xFF426CB4),
+                )),
+          ),
+        ),
+        body: SafeArea(
+          child: ListView(children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: screen.height * 0.125,
+                  horizontal: screen.width * 0.1),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "If you could have anything attainable to improve your practice, what would it be?",
+                      style: TextStyle(
+                          fontSize: screen.height * 0.025,
+                          fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.left,
+                    ),
+                    SizedBox(
+                      height: screen.height * 0.025,
+                    ),
+                    Container(
+                      height: screen.height * 0.25,
+                      width: screen.width * 0.9,
+                      child: Card(
+                          elevation: 5.0,
+                          child: TextFormField(
+                            maxLines: 20,
+                            validator: (String l) =>
+                                null, //Links, while recommended, aren't needed if description covers it
+                            style: TextStyle(color: Colors.black),
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: screen.width * 0.05,
+                                    vertical: screen.height * 0.0125),
+                                hintText: "Please enter your response",
+                                hintStyle: TextStyle(
+                                    color: Color(0xFF787878),
+                                    fontSize: screen.height * 0.0175)),
+                          )),
+                    ),
+                  ]),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: screen.height * 0.13,
+                  horizontal: screen.width * 0.05),
+              child: Container(
+                alignment: Alignment.bottomRight,
+                child: RaisedButton(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: screen.height * 0.04,
+                      vertical: screen.height * 0.0125),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  onPressed: () => [
+                    Navigator.push(context, MaterialPageRoute(builder: (_) {
+                      return SurveyComplete();
+                    }))
+                  ],
+                  color: Color(0xFF426CB4),
+                  child: Text("Next!",
+                      style: TextStyle(
+                          fontFamily: 'Poppins-Medium',
+                          color: Colors.white,
+                          fontSize: screen.height * 0.025)),
+                ),
+              ),
+            ),
+          ]),
+        ));
   }
 }

@@ -18,7 +18,7 @@ class DemoPage extends StatelessWidget {
                   text: 'keva health',
                   style: TextStyle(
                     fontFamily: 'Poppins-Medium',
-                    fontSize: screen.width * 0.0375,
+                    fontSize: screen.height * 0.0375,
                     color: Color(0xFF426CB4),
                   )),
             ),
@@ -98,7 +98,7 @@ class _VideoPlayerRemoteState extends State<VideoPlayerRemote> {
           ),
           Container(
             alignment: Alignment.bottomCenter,
-            margin: EdgeInsets.only(top: screen.height * 0.125),
+            margin: EdgeInsets.only(top: screen.height * 0.325),
             child: RaisedButton(
               padding: EdgeInsets.symmetric(
                   horizontal: screen.width * 0.125,
@@ -116,7 +116,7 @@ class _VideoPlayerRemoteState extends State<VideoPlayerRemote> {
                   style: TextStyle(
                       fontFamily: 'Poppins-Medium',
                       color: Colors.white,
-                      fontSize: screen.width * 0.03)),
+                      fontSize: screen.height * 0.025)),
             ),
           )
         ],
