@@ -253,8 +253,8 @@ class _UserDetailsState extends State<UserDetails> {
             alignment: Alignment.bottomRight,
             child: RaisedButton(
               padding: EdgeInsets.symmetric(
-                  horizontal: screen.height * 0.04,
-                  vertical: screen.height * 0.0125),
+                      horizontal: screen.width * 0.05,
+                      vertical: screen.height * 0.01),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30)),
               onPressed: () => [
@@ -267,7 +267,7 @@ class _UserDetailsState extends State<UserDetails> {
                   style: TextStyle(
                       fontFamily: 'Poppins-Medium',
                       color: Colors.white,
-                      fontSize: screen.height * 0.025)),
+                      fontSize: screen.height * 0.02)),
             ),
           ),
         ),
@@ -370,8 +370,8 @@ class _InitialQuestionState extends State<InitialQuestion> {
                 alignment: Alignment.bottomRight,
                 child: RaisedButton(
                   padding: EdgeInsets.symmetric(
-                      horizontal: screen.height * 0.04,
-                      vertical: screen.height * 0.0125),
+                      horizontal: screen.width * 0.05,
+                      vertical: screen.height * 0.01),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () => [
@@ -390,7 +390,7 @@ class _InitialQuestionState extends State<InitialQuestion> {
                       style: TextStyle(
                           fontFamily: 'Poppins-Medium',
                           color: Colors.white,
-                          fontSize: screen.height * 0.025)),
+                          fontSize: screen.height * 0.02)),
                 ),
               ),
             ),
@@ -491,8 +491,8 @@ class _SecondaryQuestionState extends State<SecondaryQuestion> {
                 alignment: Alignment.bottomRight,
                 child: RaisedButton(
                   padding: EdgeInsets.symmetric(
-                      horizontal: screen.height * 0.04,
-                      vertical: screen.height * 0.0125),
+                      horizontal: screen.width * 0.05,
+                      vertical: screen.height * 0.01),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () => [
@@ -511,7 +511,7 @@ class _SecondaryQuestionState extends State<SecondaryQuestion> {
                       style: TextStyle(
                           fontFamily: 'Poppins-Medium',
                           color: Colors.white,
-                          fontSize: screen.height * 0.025)),
+                          fontSize: screen.height * 0.02)),
                 ),
               ),
             ),
@@ -612,8 +612,8 @@ class _RPMQuestionState extends State<RPMQuestion> {
                 alignment: Alignment.bottomRight,
                 child: RaisedButton(
                   padding: EdgeInsets.symmetric(
-                      horizontal: screen.height * 0.04,
-                      vertical: screen.height * 0.0125),
+                      horizontal: screen.width * 0.05,
+                      vertical: screen.height * 0.01),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () => [
@@ -632,7 +632,7 @@ class _RPMQuestionState extends State<RPMQuestion> {
                       style: TextStyle(
                           fontFamily: 'Poppins-Medium',
                           color: Colors.white,
-                          fontSize: screen.height * 0.025)),
+                          fontSize: screen.height * 0.02)),
                 ),
               ),
             ),
@@ -713,8 +713,8 @@ class _RPMConditionalState extends State<RPMConditional> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: screen.height * 0.3,
-                  horizontal: screen.width * 0.05),
+                      horizontal: screen.width * 0.05,
+                      vertical: screen.height * 0.01),
               child: Container(
                 alignment: Alignment.bottomRight,
                 child: RaisedButton(
@@ -733,7 +733,7 @@ class _RPMConditionalState extends State<RPMConditional> {
                       style: TextStyle(
                           fontFamily: 'Poppins-Medium',
                           color: Colors.white,
-                          fontSize: screen.height * 0.025)),
+                          fontSize: screen.height * 0.02)),
                 ),
               ),
             ),
@@ -814,8 +814,8 @@ class _RPMQuestion2State extends State<RPMQuestion2> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: screen.height * 0.13,
-                  horizontal: screen.width * 0.05),
+                      horizontal: screen.width * 0.05,
+                      vertical: screen.height * 0.01),
               child: Container(
                 alignment: Alignment.bottomRight,
                 child: RaisedButton(
@@ -834,7 +834,7 @@ class _RPMQuestion2State extends State<RPMQuestion2> {
                       style: TextStyle(
                           fontFamily: 'Poppins-Medium',
                           color: Colors.white,
-                          fontSize: screen.height * 0.025)),
+                          fontSize: screen.height * 0.02)),
                 ),
               ),
             ),
@@ -915,8 +915,8 @@ class _FinalQuestionState extends State<FinalQuestion> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: screen.height * 0.13,
-                  horizontal: screen.width * 0.05),
+                      horizontal: screen.width * 0.05,
+                      vertical: screen.height * 0.01),
               child: Container(
                 alignment: Alignment.bottomRight,
                 child: RaisedButton(
@@ -935,7 +935,7 @@ class _FinalQuestionState extends State<FinalQuestion> {
                       style: TextStyle(
                           fontFamily: 'Poppins-Medium',
                           color: Colors.white,
-                          fontSize: screen.height * 0.025)),
+                          fontSize: screen.height * 0.02)),
                 ),
               ),
             ),
