@@ -13,7 +13,7 @@ class SplashPage extends StatelessWidget {
               padding: EdgeInsets.only(top: screen.height * 0.1),
               child: Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.symmetric(horizontal: screen.width * 0.025),
+                margin: EdgeInsets.symmetric(horizontal: screen.width * 0.0325),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +24,7 @@ class SplashPage extends StatelessWidget {
                         text: 'Meet\n',
                         style: TextStyle(
                           fontFamily: 'Poppins-Normal',
-                          fontSize: screen.height * 0.06,
+                          fontSize: screen.height * 0.075,
                           color: Colors.black,
                         ),
                         children: <TextSpan>[
@@ -32,7 +32,7 @@ class SplashPage extends StatelessWidget {
                               text: 'Keva Platform',
                               style: TextStyle(
                                 fontFamily: 'Poppins-Medium',
-                                fontSize: screen.height * 0.06,
+                                fontSize: screen.height * 0.075,
                                 color: Color(0xFF426CB4),
                               )),
                         ],
@@ -52,7 +52,7 @@ class SplashPage extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.only(top: screen.height * 0.325),
+              margin: EdgeInsets.only(top: screen.height * 0.375),
               child: RaisedButton(
                 padding: EdgeInsets.symmetric(
                     horizontal: screen.width * 0.1,

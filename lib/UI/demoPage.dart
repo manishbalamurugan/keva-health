@@ -98,7 +98,7 @@ class _VideoPlayerRemoteState extends State<VideoPlayerRemote> {
           ),
           Container(
             alignment: Alignment.bottomCenter,
-            margin: EdgeInsets.only(top: screen.height * 0.325),
+            margin: EdgeInsets.only(top: screen.height * 0.25),
             child: RaisedButton(
               padding: EdgeInsets.symmetric(
                   horizontal: screen.width * 0.125,

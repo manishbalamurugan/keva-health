@@ -1,9 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:keva_health/UI/demoPage.dart';
 import 'package:keva_health/UI/surveyComplete.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+FirebaseFirestore firestore = FirebaseFirestore.instance;
+String name;
+String email;
+String phone;
+String docRef;
 
 class SurveyPage extends StatelessWidget {
   @override
@@ -128,6 +135,30 @@ class UserDetails extends StatefulWidget {
 }
 
 class _UserDetailsState extends State<UserDetails> {
+  String validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value))
+      return 'Enter Valid Email';
+    else
+      return null;
+  }
+
+  String validateName(String value) {
+    if (value.length < 3)
+      return 'Name must be more than 2 charater';
+    else
+      return null;
+  }
+
+  String validateMobile(String value) {
+    if (value.length != 10)
+      return 'Mobile Number must be of 10 digit';
+    else
+      return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
@@ -159,8 +190,7 @@ class _UserDetailsState extends State<UserDetails> {
                             child: Card(
                                 elevation: 5.0,
                                 child: TextFormField(
-                                  validator: (String l) =>
-                                      null, //Links, while recommended, aren't needed if description covers it
+                                  validator: validateName,
                                   style: TextStyle(color: Colors.black),
                                   cursorColor: Colors.black,
                                   decoration: InputDecoration(
@@ -172,6 +202,9 @@ class _UserDetailsState extends State<UserDetails> {
                                       hintStyle: TextStyle(
                                           color: Color(0xFF787878),
                                           fontSize: screen.height * 0.015)),
+                                  onChanged: (String val) {
+                                    name = val;
+                                  },
                                 )),
                           ),
                         ]),
@@ -192,8 +225,7 @@ class _UserDetailsState extends State<UserDetails> {
                             child: Card(
                                 elevation: 5.0,
                                 child: TextFormField(
-                                  validator: (String l) =>
-                                      null, //Links, while recommended, aren't needed if description covers it
+                                  validator: validateEmail,
                                   style: TextStyle(color: Colors.black),
                                   cursorColor: Colors.black,
                                   decoration: InputDecoration(
@@ -205,6 +237,9 @@ class _UserDetailsState extends State<UserDetails> {
                                       hintStyle: TextStyle(
                                           color: Color(0xFF787878),
                                           fontSize: screen.height * 0.015)),
+                                  onChanged: (String val) {
+                                    email = val;
+                                  },
                                 )),
                           ),
                         ]),
@@ -225,8 +260,7 @@ class _UserDetailsState extends State<UserDetails> {
                             child: Card(
                                 elevation: 5.0,
                                 child: TextFormField(
-                                  validator: (String l) =>
-                                      null, //Links, while recommended, aren't needed if description covers it
+                                  validator: validateMobile,
                                   style: TextStyle(color: Colors.black),
                                   cursorColor: Colors.black,
                                   decoration: InputDecoration(
@@ -239,6 +273,9 @@ class _UserDetailsState extends State<UserDetails> {
                                       hintStyle: TextStyle(
                                           color: Color(0xFF787878),
                                           fontSize: screen.height * 0.015)),
+                                  onChanged: (String val) {
+                                    phone = val;
+                                  },
                                 )),
                           ),
                         ]),
@@ -253,11 +290,19 @@ class _UserDetailsState extends State<UserDetails> {
             alignment: Alignment.bottomRight,
             child: RaisedButton(
               padding: EdgeInsets.symmetric(
-                      horizontal: screen.width * 0.05,
-                      vertical: screen.height * 0.01),
+                  horizontal: screen.width * 0.05,
+                  vertical: screen.height * 0.01),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30)),
               onPressed: () => [
+                firestore.collection("users").add({
+                  "name": name,
+                  "email": email,
+                  "phoneNumber": phone
+                }).then((value) {
+                  docRef = value.id;
+                  print(docRef);
+                }),
                 Navigator.push(context, MaterialPageRoute(builder: (_) {
                   return InitialQuestion();
                 })),
@@ -279,8 +324,6 @@ class _UserDetailsState extends State<UserDetails> {
 enum boolChoices { yes, no }
 
 class InitialQuestion extends StatefulWidget {
-  InitialQuestion({Key key}) : super(key: key);
-
   @override
   _InitialQuestionState createState() => _InitialQuestionState();
 }
@@ -289,6 +332,7 @@ class _InitialQuestionState extends State<InitialQuestion> {
   boolChoices initial;
   @override
   Widget build(BuildContext context) {
+    print(docRef);
     Size screen = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
@@ -375,6 +419,15 @@ class _InitialQuestionState extends State<InitialQuestion> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () => [
+                    initial == boolChoices.yes
+                        ? firestore
+                            .collection("users")
+                            .doc(docRef)
+                            .update({"interest": "yes"})
+                        : firestore
+                            .collection("users")
+                            .doc(docRef)
+                            .update({"interest": "no"}),
                     initial == boolChoices.yes
                         ? Navigator.push(context,
                             MaterialPageRoute(builder: (_) {
@@ -497,6 +550,15 @@ class _SecondaryQuestionState extends State<SecondaryQuestion> {
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () => [
                     initial == boolChoices.yes
+                        ? firestore
+                            .collection("users")
+                            .doc(docRef)
+                            .update({"demoInterest": "yes"})
+                        : firestore
+                            .collection("users")
+                            .doc(docRef)
+                            .update({"demoInterest": "no"}),
+                    initial == boolChoices.yes
                         ? Navigator.push(context,
                             MaterialPageRoute(builder: (_) {
                             return SurveyComplete();
@@ -618,6 +680,15 @@ class _RPMQuestionState extends State<RPMQuestion> {
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () => [
                     initial == boolChoices.yes
+                        ? firestore
+                            .collection("users")
+                            .doc(docRef)
+                            .update({"currentRPM": "yes"})
+                        : firestore
+                            .collection("users")
+                            .doc(docRef)
+                            .update({"currentRPM": "no"}),
+                    initial == boolChoices.yes
                         ? Navigator.push(context,
                             MaterialPageRoute(builder: (_) {
                             return RPMConditional();
@@ -652,6 +723,7 @@ class _RPMConditionalState extends State<RPMConditional> {
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
+    String response;
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -707,14 +779,17 @@ class _RPMConditionalState extends State<RPMConditional> {
                                 hintStyle: TextStyle(
                                     color: Color(0xFF787878),
                                     fontSize: screen.height * 0.0175)),
+                            onChanged: (String val) {
+                              response = val;
+                            },
                           )),
                     ),
                   ]),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                      horizontal: screen.width * 0.05,
-                      vertical: screen.height * 0.01),
+                  horizontal: screen.width * 0.05,
+                  vertical: screen.height * 0.01),
               child: Container(
                 alignment: Alignment.bottomRight,
                 child: RaisedButton(
@@ -724,6 +799,10 @@ class _RPMConditionalState extends State<RPMConditional> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () => [
+                    firestore
+                        .collection("users")
+                        .doc(docRef)
+                        .update({"currentRPMSolution": response}),
                     Navigator.push(context, MaterialPageRoute(builder: (_) {
                       return RPMQuestion2();
                     }))
@@ -753,6 +832,7 @@ class _RPMQuestion2State extends State<RPMQuestion2> {
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
+    String response;
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -808,14 +888,17 @@ class _RPMQuestion2State extends State<RPMQuestion2> {
                                 hintStyle: TextStyle(
                                     color: Color(0xFF787878),
                                     fontSize: screen.height * 0.0175)),
+                            onChanged: (String val) {
+                              response = val;
+                            },
                           )),
                     ),
                   ]),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                      horizontal: screen.width * 0.05,
-                      vertical: screen.height * 0.01),
+                  horizontal: screen.width * 0.05,
+                  vertical: screen.height * 0.01),
               child: Container(
                 alignment: Alignment.bottomRight,
                 child: RaisedButton(
@@ -825,6 +908,10 @@ class _RPMQuestion2State extends State<RPMQuestion2> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () => [
+                    firestore
+                        .collection("users")
+                        .doc(docRef)
+                        .update({"impactRPM": response}),
                     Navigator.push(context, MaterialPageRoute(builder: (_) {
                       return FinalQuestion();
                     }))
@@ -854,6 +941,7 @@ class _FinalQuestionState extends State<FinalQuestion> {
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
+    String response;
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -909,14 +997,17 @@ class _FinalQuestionState extends State<FinalQuestion> {
                                 hintStyle: TextStyle(
                                     color: Color(0xFF787878),
                                     fontSize: screen.height * 0.0175)),
+                            onChanged: (String val) {
+                              response = val;
+                            },
                           )),
                     ),
                   ]),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                      horizontal: screen.width * 0.05,
-                      vertical: screen.height * 0.01),
+                  horizontal: screen.width * 0.05,
+                  vertical: screen.height * 0.01),
               child: Container(
                 alignment: Alignment.bottomRight,
                 child: RaisedButton(
@@ -926,6 +1017,10 @@ class _FinalQuestionState extends State<FinalQuestion> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () => [
+                    firestore
+                        .collection("users")
+                        .doc(docRef)
+                        .update({"userPracticeImprovement": response}),
                     Navigator.push(context, MaterialPageRoute(builder: (_) {
                       return SurveyComplete();
                     }))

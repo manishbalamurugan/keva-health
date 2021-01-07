@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "591212556634",
+    "project_id": "keva-health-provider",
+    "storage_bucket": "keva-health-provider.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591212556634:android:c1188977a22095e310c363",
+        "android_client_info": {
+          "package_name": "com.example.keva_health"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "591212556634-3tgdq0ljfln9ttli9abatvv9mk1h0q5p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjzPQ-LiM-iyx7Ym1LJShoAtG26qBrJN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "591212556634-3tgdq0ljfln9ttli9abatvv9mk1h0q5p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "591212556634-sn6tc3gneeka0g6214a26aqfqs6ihpuv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.kevaHealth"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
