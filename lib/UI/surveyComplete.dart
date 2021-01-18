@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:keva_health/UI/demoPage.dart';
+import 'package:keva_health/UI/splashPage.dart';
+import 'package:keva_health/UI/surveyPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -31,12 +33,11 @@ class SurveyComplete extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(top: screen.height * 0.1),
               child: Column(children: [
-                Container(
-                  height: screen.height * 0.5,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/graphic.jpg'),
-                        fit: BoxFit.contain),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    'assets/final-graphic.png',
+                    scale: 0.75,
                   ),
                 ),
                 Padding(
@@ -45,7 +46,7 @@ class SurveyComplete extends StatelessWidget {
                       top: screen.height * 0.075,
                       bottom: screen.height * 0.02),
                   child: Text(
-                    "Thank you for completing our survey! We appreciate the feedback.",
+                    "Thank your attention! We appreciate your time and we'll be in touch shortly.",
                     style: TextStyle(fontSize: screen.height * 0.02),
                   ),
                 ),
@@ -57,9 +58,13 @@ class SurveyComplete extends StatelessWidget {
                         vertical: screen.height * 0.01),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30)),
-                    onPressed: _launchURL,
+                    onPressed: () => [
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return SplashPage();
+                      })),
+                    ],
                     color: Color(0xFF426CB4),
-                    child: Text("Learn more!",
+                    child: Text("Done",
                         style: TextStyle(
                             fontFamily: 'Poppins-Medium',
                             color: Colors.white,
@@ -72,7 +77,7 @@ class SurveyComplete extends StatelessWidget {
                 GestureDetector(
                   onTap: () => [
                     Navigator.push(context, MaterialPageRoute(builder: (_) {
-                      return DemoPage();
+                      return SurveyPage();
                     })),
                   ],
                   child: Text(

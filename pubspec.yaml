@@ -91,6 +91,8 @@ flutter:
     - assets/graphic.svg
     - assets/graphic.png
     - assets/keva-logo.jpg
+    - assets/doctor-image.png
+    - assets/final-graphic.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

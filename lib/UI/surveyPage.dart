@@ -79,8 +79,8 @@ class UserSurvey extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Image.asset(
-            'assets/graphic.jpg',
-            scale: 5,
+            'assets/doctor-image.png',
+            scale: 2.5,
           ),
         ),
         Padding(
